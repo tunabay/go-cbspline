@@ -1,0 +1,117 @@
+run:
+  timeout: 5m
+  tests: true
+  fast: false
+  skip-dirs-use-default: true
+  print-issued-lines: true
+  print-linter-name: true
+
+linters:
+  disable-all: true
+  fast: false
+  enable:
+    - deadcode
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+    - contextcheck
+    - dogsled
+    - errchkjson
+    - errname
+    - errorlint
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    - goconst
+    - gocritic
+    - goerr113
+    - gofmt
+    - gofumpt
+    - goimports
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - grouper
+    - ifshort
+    - importas
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - prealloc
+    - predeclared
+    - promlinter
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - stylecheck
+    - tenv
+    - testpackage
+    - thelper
+    - unconvert
+    - unparam
+    - wastedassign
+    - whitespace
+    - wrapcheck
+
+linters-settings:
+  gofumpt:
+    lang-version: "1.18"
+  gosimple:
+    go: "1.18"
+  staticcheck:
+    go: "1.18"
+  stylecheck:
+    go: "1.18"
+  unused:
+    go: "1.18"
+
+  misspell:
+    locale: US
+
+  errcheck:
+    exclude-functions:
+      - io/ioutil.ReadFile
+      - io.Copy(*bytes.Buffer)
+      - io.Copy(os.Stdout)
+
+  goconst:
+    min-occurrences: 5
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  fix: false
+  new: false
+
+  exclude-use-default: true
+  exclude-rules:
+
+    # ignore in unit tests
+    - linters:
+        - gosec
+        - goerr113
+        - ifshort
+      path: "_test\\.go$"
+
+    - linters:
+        - staticcheck
+      text: "^SA9003: empty branch"
+
+    - linters:
+        - revive
+        - stylecheck
+      text: "error string should not be capitalized"
+      source: "\"(TDMA) "
+

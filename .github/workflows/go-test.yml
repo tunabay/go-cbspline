@@ -1,0 +1,45 @@
+name: go-test
+on:
+  push:
+    tags:
+      - v*
+    branches-ignore:
+      - 'doc-**'
+      - 'doc/**'
+      - 'ci-**'
+      - 'ci/**'
+    paths:
+      - '**.go'
+  pull_request:
+    branches:
+      - main
+      - master
+      - release
+    paths:
+      - '**.go'
+jobs:
+  go-tests:
+    runs-on: ubuntu-latest
+    env:
+      artifactDir: ${{ github.workspace }}/artifact
+    steps:
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ^1.18
+      - uses: actions/checkout@v2
+      - name: go-test
+        run: |
+          export ARTIFACT_DIR="${{ env.artifactDir }}"
+          mkdir -pv "${ARTIFACT_DIR}"
+          go test -v -count=1 \
+                  -covermode=count \
+                  -coverpkg=github.com/tunabay/go-cbspline \
+                  -coverprofile=cover.out \
+                  ./...
+          go tool cover -func=cover.out
+          go tool cover -html=cover.out \
+                        -o "${ARTIFACT_DIR}/go-test-coverage.html"
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ env.artifactDir }}
+          retention-days: 3
